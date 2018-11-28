@@ -1,6 +1,7 @@
 package alarmcerdas.feri_setyo.com.alarmcerdas;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int NOTIFICATION_ID =0 ;
     Button setAlarm,btn_reset;
     TimePicker tp_time;
     TextView tv_display;
@@ -125,8 +128,26 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             pertanyaan();
+            notif();
         }
     };
+
+    public void notif(){
+        Intent intent = new Intent(this,MainActivity.class);
+        //menginisialiasasi intent
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_access_alarm_white_24dp)
+                .setContentTitle("Alarm Up")
+                .setContentText("Bangun... bangun...")
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(NOTIFICATION_ID, mBuilder.build()
+        );
+    }
 
     public void pertanyaan(){
         final MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.dududu);
